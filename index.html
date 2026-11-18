@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NZ & China — Essay Statistics Flashcards</title>
+<style>
+:root{color-scheme:light dark;--bg:#f4f6fb;--panel:#fff;--ink:#172033;--muted:#65718a;--accent:#315ee7;--line:#dce2ef}
+@media(prefers-color-scheme:dark){:root{--bg:#101522;--panel:#1a2335;--ink:#edf2ff;--muted:#aab5cb;--accent:#8ba5ff;--line:#34415b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;display:grid;place-items:center;padding:22px}
+main{width:min(720px,100%)}header{margin-bottom:18px}h1{font-size:clamp(1.45rem,4vw,2rem);margin:0 0 5px}p{color:var(--muted);margin:0}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:16px 0 10px;font-size:.92rem;color:var(--muted)}
+.track{height:7px;background:var(--line);border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:var(--accent);transition:width .2s}
+.card{margin:18px 0;background:var(--panel);border:1px solid var(--line);border-radius:22px;min-height:300px;display:grid;place-items:center;padding:30px;text-align:center;box-shadow:0 12px 34px #17203312;cursor:pointer;user-select:none}
+.card:focus{outline:3px solid var(--accent);outline-offset:3px}.side{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}.content{font-size:clamp(1.35rem,4vw,2rem);font-weight:650;max-width:580px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+button{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:11px 17px;border-radius:12px;font:inherit;font-weight:600;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:white}button:disabled{opacity:.4;cursor:not-allowed}
+.small{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap}.small button{font-size:.9rem;padding:8px 12px}
+.note{margin:18px auto 0;max-width:620px;text-align:center;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body><main>
+<header><h1>New Zealand & China: Essay Statistics</h1><p>Flashcards for memorising the figures and dates in your essay.</p></header>
+<div class="top"><span id="counter">Card 1 of 19</span><span id="known">Known: 0</span></div>
+<div class="track"><div class="fill" id="fill"></div></div>
+<div class="card" id="card" role="button" tabindex="0" aria-label="Flashcard. Click or press Enter to flip.">
+  <div><div class="side" id="side">Question</div><div class="content" id="content"></div></div>
+</div>
+<div class="controls">
+<button id="prev">← Previous</button><button class="primary" id="flip">Flip card</button><button id="next">Next →</button>
+</div>
+<div class="small">
+<button id="missed">✕ Still learning</button><button id="mastered">✓ I know this</button><button id="shuffle">Shuffle</button><button id="reset">Reset progress</button>
+</div>
+<p class="note">Your progress is saved in this browser on this device. Use the arrow keys to move, Space or Enter to flip, and mark each card as you go.</p>
+</main>
+<script>
+const original = [["How many seats are in New Zealand Parliament?", "120 seats"], ["What majority does a party or coalition need to form government?", "Over 60 seats (the essay states 50%)."], ["Which election illustrates the 2017 confidence-and-supply agreement?", "The 2017 election: the Green Party supported Labour and NZ First."], ["How many members are in China's Politburo Standing Committee?", "7 members"], ["How many members are in China's Politburo?", "24 members"], ["How many delegates are in China's National People's Congress (NPC)?", "3,000 delegates"], ["How long do NPC delegates serve?", "5-year terms"], ["How many ethnic minorities does China have, according to the essay?", "55 ethnic minorities"], ["When was China's current constitution adopted?", "1982"], ["Which year was New Zealand's Constitution Act passed?", "1986"], ["Which year was New Zealand's Electoral Act passed?", "1993"], ["Which year was the New Zealand Bill of Rights Act passed?", "1990"], ["What percentage of party votes does a New Zealand party need to qualify for a seat?", "At least 5%"], ["Which year did the Labour-led government get replaced by a National-led government?", "2023"], ["Freedom House 2025: China's political rights score?", "2 out of 40"], ["Freedom House 2025: China's civil liberties score?", "7 out of 60"], ["Freedom House 2025: New Zealand's political rights score?", "40 out of 40"], ["Freedom House 2025: New Zealand's civil liberties score?", "59 out of 60"], ["What year is the Freedom House report cited in the essay?", "2025"]];
+let deck = original.map((c,i)=>({q:c[0],a:c[1],id:i}));
+let index=0, flipped=false;
+const progress = JSON.parse(localStorage.getItem('nzChinaStatsProgress')||'{}');
+const $=id=>document.getElementById(id);
+function render(){
+ const c=deck[index]; $('side').textContent=flipped?'Answer':'Question';
+ $('content').textContent=flipped?c.a:c.q;
+ $('counter').textContent=`Card ${index+1} of ${deck.length}`;
+ $('known').textContent=`Known: ${Object.values(progress).filter(v=>v==='known').length}`;
+ $('fill').style.width=`${(Object.values(progress).filter(v=>v==='known').length/deck.length)*100}%`;
+ $('prev').disabled=index===0; $('next').disabled=index===deck.length-1;
+}
+function flip(){flipped=!flipped;render()}
+function move(n){index=Math.max(0,Math.min(deck.length-1,index+n));flipped=false;render()}
+function mark(v){progress[deck[index].id]=v;localStorage.setItem('nzChinaStatsProgress',JSON.stringify(progress));if(index<deck.length-1)move(1);else render()}
+$('card').onclick=flip;$('flip').onclick=flip;$('prev').onclick=()=>move(-1);$('next').onclick=()=>move(1);
+$('missed').onclick=()=>mark('learning');$('mastered').onclick=()=>mark('known');
+$('shuffle').onclick=()=>{for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}index=0;flipped=false;render()};
+$('reset').onclick=()=>{if(confirm('Clear all saved progress?')){Object.keys(progress).forEach(k=>delete progress[k]);localStorage.removeItem('nzChinaStatsProgress');index=0;flipped=false;render()}};
+document.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){if(document.activeElement.tagName!=='BUTTON'){e.preventDefault();flip()}}if(e.key==='ArrowRight')move(1);if(e.key==='ArrowLeft')move(-1)});
+render();
+</script></body></html>
